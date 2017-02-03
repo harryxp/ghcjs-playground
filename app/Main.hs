@@ -1,28 +1,34 @@
 module Main (main) where
 
-import Data.Char
-
 import GHCJS.DOM (currentDocument)
-import GHCJS.DOM.Types (HTMLInputElement(..), FromJSString, JSString, fromJSString, toJSString, unsafeCastTo)
+import GHCJS.DOM.Types (MouseEvent, IsEventTarget, IsEvent, HTMLInputElement(..), FromJSString, JSString, fromJSString, toJSString, unsafeCastTo)
 import GHCJS.DOM.Document (createElementUnsafe, getBody)
+import GHCJS.DOM.EventM (EventM, on, mouseClientXY)
 import GHCJS.DOM.HTMLInputElement (getValue, setType, setValue)
 import GHCJS.DOM.Node (appendChild)
+import qualified GHCJS.DOM.Element as E (click)
 
 main :: IO ()
 main =
-  currentDocument >>=
-  \(Just doc)    -> getBody doc >>=
+  currentDocument                                                                              >>=
+  \(Just doc)    -> getBody doc                                                                >>=
   \(Just body)   -> (createElementUnsafe doc (Just "input") >>= unsafeCastTo HTMLInputElement) >>=
   \loanInput     -> (createElementUnsafe doc (Just "input") >>= unsafeCastTo HTMLInputElement) >>=
   \interestInput -> (createElementUnsafe doc (Just "input") >>= unsafeCastTo HTMLInputElement) >>=
   \yearInput     -> (createElementUnsafe doc (Just "input") >>= unsafeCastTo HTMLInputElement) >>=
   \calcButton    -> setType calcButton (toJSString "button")                                   >>
+
   appendChild body (Just loanInput)                                                            >>
   appendChild body (Just interestInput)                                                        >>
   appendChild body (Just yearInput)                                                            >>
   appendChild body (Just calcButton)                                                           >>
-  getValue yearInput                                                                           >>=
-  \(Just year)   -> putStrLn year
+
+  on calcButton E.click calcButtonEventHandler                                                 >>=
+  id
+
+
+calcButtonEventHandler :: EventM HTMLInputElement MouseEvent ()
+calcButtonEventHandler = undefined
 
 
 {--
