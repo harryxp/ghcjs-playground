@@ -8,7 +8,24 @@ import GHCJS.DOM.Document (createElementUnsafe, getBody)
 import GHCJS.DOM.HTMLInputElement (getValue, setType, setValue)
 import GHCJS.DOM.Node (appendChild)
 
-main = do
+main :: IO ()
+main =
+  currentDocument >>=
+  \(Just doc)    -> getBody doc >>=
+  \(Just body)   -> (createElementUnsafe doc (Just "input") >>= unsafeCastTo HTMLInputElement) >>=
+  \loanInput     -> (createElementUnsafe doc (Just "input") >>= unsafeCastTo HTMLInputElement) >>=
+  \interestInput -> (createElementUnsafe doc (Just "input") >>= unsafeCastTo HTMLInputElement) >>=
+  \yearInput     -> (createElementUnsafe doc (Just "input") >>= unsafeCastTo HTMLInputElement) >>=
+  \calcButton    -> setType calcButton (toJSString "button")                                   >>
+  appendChild body (Just loanInput)                                                            >>
+  appendChild body (Just interestInput)                                                        >>
+  appendChild body (Just yearInput)                                                            >>
+  appendChild body (Just calcButton)                                                           >>
+  getValue yearInput                                                                           >>=
+  \(Just year)   -> putStrLn year
+
+
+{--
   Just doc <- currentDocument
   Just body <- getBody doc
 
@@ -31,3 +48,4 @@ main = do
   putStrLn (fromJSString v)
 
   return ()
+--}
