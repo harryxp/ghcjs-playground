@@ -8,3 +8,7 @@ setup-info:
       ghcjs-0.2.1.9007015_ghc-8.0.1:
            url: http://ghcjs.tolysz.org/ghc-8.0-2017-01-11-lts-7.15-9007015.tar.gz
            sha1: 30d34e9d704bdb799066387dfa1ba98b8884d932
+
+extra-deps:
+- ghcjs-dom-0.7.0.4
+- ghcjs-dom-jsffi-0.7.0.4
