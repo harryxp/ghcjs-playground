@@ -23,12 +23,12 @@ main =
   appendChild body (Just yearInput)                                                            >>
   appendChild body (Just calcButton)                                                           >>
 
-  on calcButton E.click calcButtonEventHandler                                                 >>=
+  on calcButton E.click (calcButtonEventHandler yearInput)                                     >>=
   id
 
 
-calcButtonEventHandler :: EventM HTMLInputElement MouseEvent ()
-calcButtonEventHandler = undefined
+calcButtonEventHandler :: HTMLInputElement -> EventM HTMLInputElement MouseEvent ()
+calcButtonEventHandler yearInput = return ()
 
 
 {--
