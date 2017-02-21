@@ -1,60 +1,34 @@
 module Main (main) where
 
-import GHCJS.DOM (currentDocument)
-import GHCJS.DOM.Types (MouseEvent, IsEventTarget, IsEvent, HTMLInputElement(..), FromJSString, JSString, fromJSString, toJSString, unsafeCastTo, ToJSString, Text, IsDocument)
-import GHCJS.DOM.Document (createElementUnsafe, createTextNode, getBody)
-import GHCJS.DOM.EventM (EventM, on, mouseClientXY)
-import GHCJS.DOM.HTMLInputElement (getValue, setType, setValue)
-import GHCJS.DOM.Node (appendChild)
-import qualified GHCJS.DOM.Element as E (click)
 import Control.Monad.IO.Class (MonadIO(..))
+import GHCJS.DOM (currentDocument)
+import GHCJS.DOM.Document (createElementUnsafe, createTextNodeUnsafe, getBody)
+import GHCJS.DOM.EventM (on)
+import GHCJS.DOM.HTMLInputElement (getValueUnsafe, setType)
+import GHCJS.DOM.Node (appendChild)
+import GHCJS.DOM.Types (HTMLInputElement(..), IsDocument, Text, unsafeCastTo)
+
+import qualified GHCJS.DOM.Element as E (click)
 
 main :: IO ()
 main = do
-  Just doc      <- currentDocument
-  Just body     <- getBody doc
-  loanInput     <- (createElementUnsafe doc (Just "input") >>= unsafeCastTo HTMLInputElement)
-  interestInput <- (createElementUnsafe doc (Just "input") >>= unsafeCastTo HTMLInputElement)
-  yearInput     <- (createElementUnsafe doc (Just "input") >>= unsafeCastTo HTMLInputElement)
-  calcButton    <- (createElementUnsafe doc (Just "input") >>= unsafeCastTo HTMLInputElement)
-  setType calcButton "button"
+  Just doc  <- currentDocument
+  Just body <- getBody doc
+  input     <- (createElementUnsafe doc (Just "input") >>= unsafeCastTo HTMLInputElement)
+  button    <- (createElementUnsafe doc (Just "input") >>= unsafeCastTo HTMLInputElement)
+  setType button "button"
 
-  appendChild body (Just loanInput)
-  appendChild body (Just interestInput)
-  appendChild body (Just yearInput)
-  appendChild body (Just calcButton)
+  appendChild body (Just input)
+  appendChild body (Just button)
 
-  on calcButton E.click $ do
-    text <- getValue yearInput >>= \(Just year) -> createTextNode' doc year
-    appendChild body text
+  on button E.click $ do
+    text     <- getValueUnsafe input
+    textNode <- createTextNodeUnsafe' doc text
+    appendChild body (Just textNode)
     return ()
 
   return ()
 
-createTextNode' :: (MonadIO m, IsDocument self) => self -> JSString -> m (Maybe Text)
-createTextNode' = createTextNode
+createTextNodeUnsafe' :: (MonadIO m, IsDocument self) => self -> String -> m Text
+createTextNodeUnsafe' = createTextNodeUnsafe
 
-{--
-  Just doc <- currentDocument
-  Just body <- getBody doc
-
-  loanInput <- createElementUnsafe doc (Just "input") >>= unsafeCastTo HTMLInputElement
-  interestInput <- createElementUnsafe doc (Just "input") >>= unsafeCastTo HTMLInputElement
-  yearInput <- createElementUnsafe doc (Just "input") >>= unsafeCastTo HTMLInputElement
-  calcBtn <- createElementUnsafe doc (Just "input") >>= unsafeCastTo HTMLInputElement
-  setType calcBtn (toJSString "button")
-
-  appendChild body (Just loanInput)
-  appendChild body (Just interestInput)
-  appendChild body (Just yearInput)
-  appendChild body (Just calcBtn)
-
-  setValue yearInput (Just (toJSString "year"))
-
-  Just v <- getValue yearInput
-  v :: JSString
-
-  putStrLn (fromJSString v)
-
-  return ()
---}

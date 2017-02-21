@@ -1,8 +1,15 @@
+As of now (20170220), using `ghcjs` to write a non-trivial program is still,
+well, non-trivial.  This git repository demonstrates a repeatable process to
+set up a small but workable (more than `hello, world`) `ghcjs` project using
+`stack`.  This has only been tested on Linux.
+
+The first step is to install `stack` using your favorate package manager.  Then:
 
     stack new ghcjs-playground
     cd ghcjs-playground
 
-Follow [stack document](https://docs.haskellstack.org/en/stable/ghcjs/) from here
+Follow [stack document](https://docs.haskellstack.org/en/stable/ghcjs/) from
+here:
 
     vim stack.yaml  # replace the content
     stack setup
@@ -176,6 +183,15 @@ This is a slow process.  At the end you'll see this:
     To use this GHCJS and packages outside of a project, consider using:
     stack ghc, stack ghci, stack runghc, or stack exec
 
+I have a `app/Main.hs` ready to play with.  The code demonstrates:
+
+* Dynamically generating HTML elements.
+* Fetching a value from an input field.
+* Showing that value on the page.
+
+I have a more sophisticated `ghcjs` project
+[here](https://github.com/harryxp/haskell-things/tree/master/MortgageCalc).
+
 Build and run:
 
     stack build
@@ -191,3 +207,4 @@ This works.  Let's save everything in git...
     git init
     git add app/ ghcjs-playground.cabal LICENSE Setup.hs src/ stack.yaml test/
     git commit -m 'Initial commit.'
+
