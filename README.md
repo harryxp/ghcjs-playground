@@ -190,7 +190,7 @@ I have a `app/Main.hs` ready to play with.  The code demonstrates:
 * Showing that value on the page.
 
 I have a more sophisticated `ghcjs` project
-[here](https://github.com/harryxp/haskell-things/tree/master/MortgageCalc).
+[here](https://github.com/harryxp/MortgageCalc).
 
 Build and run:
 
